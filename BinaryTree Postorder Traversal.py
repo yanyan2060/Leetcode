@@ -12,16 +12,18 @@ class Solution(object):
         :rtype: List[int]
         """
         if root == None: return []
-        stack, res = [], []
-        stack.append(root)
-        prev = None
-        while stack:
-            cur = stack[len(stack) - 1]
-            if (cur.left == None and cur.right == None) or (prev and (prev == cur.left or prev == cur.right)):
-                res.append(cur.val)
-                stack.pop()
-                prev = cur
+        stack = []
+        res = []
+        lastVisit = None
+        while root or stack:
+            if root:
+                stack.append(root)
+                root = root.left
             else:
-                if cur.right: stack.append(cur.right)
-                if cur.left: stack.append(cur.left)
+                peak = stack[-1]
+                if peak.right and peak.right != lastVisit:
+                    root = peak.right
+                else:
+                    lastVisit = stack.pop()
+                    res.append(lastVisit.val)
         return res
